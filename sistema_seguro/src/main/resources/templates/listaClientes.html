@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Clientes</title>
+</head>
+<body>
+    <h1>Clientes</h1>
+    <table border="1">
+        <tr>
+            <th>CPF</th>
+            <th>Nome</th>
+            <th>Telefone</th>
+        </tr>
+        <tr th:each="cliente : ${clientes}">
+            <td th:text="${cliente.cpf}"></td>
+            <td th:text="${cliente.nome}"></td>
+            <td th:text="${cliente.telefone}"></td>
+        </tr>
+    </table>
+</body>
+</html>
