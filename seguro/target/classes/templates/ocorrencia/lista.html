@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Reset default styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f6f9;
+            color: #2c3e50;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 900px;
+            margin-top: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #34495e;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            background-color: #ffffff;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ececec;
+        }
+
+        th {
+            background-color: #f7f7f7;
+            font-weight: 600;
+            color: #7f8c8d;
+        }
+
+        td {
+            color: #2c3e50;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .actions a {
+            margin-right: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            color: #3498db;
+        }
+
+        .actions a:hover {
+            color: #2980b9;
+        }
+
+        .btn {
+            padding: 12px 18px;
+            font-size: 16px;
+            font-weight: 700;
+            text-align: center;
+            text-decoration: none;
+            background-color: #3498db;
+            color: #ffffff;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .mensagem-servidor {
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .mensagem-servidor.success {
+            background-color: #e9f7ef;
+            border: 1px solid #d4efdf;
+            color: #27ae60;
+        }
+
+        .mensagem-servidor.error {
+            background-color: #fbeeee;
+            border: 1px solid #f5c6cb;
+            color: #c0392b;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            table, th, td {
+                font-size: 14px;
+            }
+
+            .btn {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
+    <title>Lista de Ocorrências</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Lista de Ocorrências</h1>
+
+        <!-- Success/Error message display -->
+        <div th:if="${mensagem}" class="mensagem-servidor success" th:classappend="${mensagem.contains('erro') ? ' error' : ''}" th:text="${mensagem}"></div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Local</th>
+                    <th>Descrição</th>
+                    <th>Data</th>
+                    <th>Renavam</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="ocorrencia : ${ocorrencias}">
+                    <td th:text="${ocorrencia.codigo}"></td>
+                    <td th:text="${ocorrencia.local}"></td>
+                    <td th:text="${ocorrencia.descricao}"></td>
+                    <td th:text="${ocorrencia.data}"></td>
+                    <td th:text="${ocorrencia.renavam}"></td>
+                    <td class="actions">
+                        <a th:href="@{/ocorrencia/editar/{codigo}(codigo=${ocorrencia.codigo})}">Editar</a>
+                        <a th:href="@{/ocorrencia/excluir/{codigo}(codigo=${ocorrencia.codigo})}" th:onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <a href="/ocorrencia/novo" class="btn">Adicionar Nova Ocorrência</a>
+    </div>
+</body>
+</html>
