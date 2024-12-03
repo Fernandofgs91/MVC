@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
         /* Reset default styles */
         * {
             margin: 0;
@@ -134,42 +134,52 @@
             }
         }
     </style>
-    <title>Lista de Ocorrências</title>
-</head>
-<body>
-    <div class="container">
-        <h1>Lista de Ocorrências</h1>
+        <title>Lista de Ocorrências</title>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Lista de Ocorrências</h1>
 
-        <!-- Success/Error message display -->
-        <div th:if="${mensagem}" class="mensagem-servidor success" th:classappend="${mensagem.contains('erro') ? ' error' : ''}" th:text="${mensagem}"></div>
+            <!-- Success/Error message display -->
+            <div th:if="${mensagem}" class="mensagem-servidor success"
+                th:classappend="${mensagem.contains('erro') ? ' error' : ''}"
+                th:text="${mensagem}"></div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Código</th>
-                    <th>Local</th>
-                    <th>Descrição</th>
-                    <th>Data</th>
-                    <th>Renavam</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="ocorrencia : ${ocorrencias}">
-                    <td th:text="${ocorrencia.codigo}"></td>
-                    <td th:text="${ocorrencia.local}"></td>
-                    <td th:text="${ocorrencia.descricao}"></td>
-                    <td th:text="${ocorrencia.data}"></td>
-                    <td th:text="${ocorrencia.renavam}"></td>
-                    <td class="actions">
-                        <a th:href="@{/ocorrencia/editar/{codigo}(codigo=${ocorrencia.codigo})}">Editar</a>
-                        <a th:href="@{/ocorrencia/excluir/{codigo}(codigo=${ocorrencia.codigo})}" th:onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Local</th>
+                        <th>Descrição</th>
+                        <th>Data</th>
+                        <th>Renavam</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="ocorrencia : ${ocorrencias}">
+                        <td th:text="${ocorrencia.codigo}"></td>
+                        <td th:text="${ocorrencia.local}"></td>
+                        <td th:text="${ocorrencia.descricao}"></td>
+                        <td th:text="${ocorrencia.data}"></td>
+                        <td th:text="${ocorrencia.renavam}"></td>
+                        <td class="actions">
+                            <a
+                                th:href="@{/ocorrencia/editar/{codigo}(codigo=${ocorrencia.codigo})}">Editar</a>
+                            <form
+                                th:action="@{/ocorrencia/excluir/{codigo}(codigo=${ocorrencia.codigo})}"
+                                method="post"
+                                th:onsubmit="return confirm('Tem certeza que deseja excluir o cliente?');"
+                                style="display:inline;">
+                                <button type="submit"
+                                    class="btn btn-delete">Excluir</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
-        <a href="/ocorrencia/novo" class="btn">Adicionar Nova Ocorrência</a>
-    </div>
-</body>
+            <a href="/ocorrencia/novo" class="btn">Adicionar Nova Ocorrência</a>
+        </div>
+    </body>
 </html>
