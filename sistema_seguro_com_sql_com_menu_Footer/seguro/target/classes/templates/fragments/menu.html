@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Menu de Seguros</title>
+    <link rel="stylesheet" href="/css/menu.css">
+</head>
+<body>
+    <nav th:fragment="menu">
+        <ul class="menu">
+            <li><a th:href="@{/}">Home</a></li>
+            <li>
+                <a href="#">Clientes</a>
+                <ul class="submenu">
+                    <li><a th:href="@{/cliente/novo}">Cadastrar Cliente</a></li>
+                    <li><a th:href="@{/cliente}">Lista de Clientes</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">Carros</a>
+                <ul class="submenu">
+                    <li><a th:href="@{/carro/novo}">Cadastrar Carro</a></li>
+                    <li><a th:href="@{/carro}">Lista de Carros</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">Ocorrências</a>
+                <ul class="submenu">
+                    <li><a th:href="@{/ocorrencia/novo}">Registrar Ocorrência</a></li>
+                    <li><a th:href="@{/ocorrencia}">Histórico de Ocorrências</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+</body>
+</html>
