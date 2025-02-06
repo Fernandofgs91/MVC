@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/cadastrar.css}">
+    <title>Login</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Login</h1>
+        <form action="/login/entrar" method="post">
+            <input type="text" name="usuario" placeholder="Usuário" />
+            <input type="password" name="senha" placeholder="Senha" />
+            <button type="submit">Entrar</button>
+            <button type="reset">Limpar</button>
+        </form>
+        <p th:if="${mensagem}" th:text="${mensagem}" class="mensagem" role="alert"></p>
+        <p>
+            <a th:href="@{/login/telaNovoUsuario}" class="signup-link">Ainda não tem cadastro? Clique aqui para se cadastrar.</a>
+
+        </p>
+    </div>
+</body>
+
+</html>

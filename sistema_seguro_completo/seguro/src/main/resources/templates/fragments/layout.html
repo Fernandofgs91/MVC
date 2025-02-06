@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}">Sistema</title>    
+    <link th:href="@{/css/styles.css}" rel="stylesheet"> 
+</head>
+<body>
+
+    <div class="container">
+        <h1 th:text="${title}">Bem-vindo ao Sistema!</h1>
+    
+        <header th:insert="~{fragments/menu :: menu}"></header>
+    
+        <div class="description">
+            <div>
+                <p>
+                    Bem-vindo ao nosso sistema de seguros! Aqui, você encontra as melhores soluções para proteger o que é mais importante para você. 
+                </p>
+                <p>
+                    <strong>Clientes:</strong> Gerencie facilmente seus dados pessoais e informações de contato. Garantimos um atendimento personalizado para atender todas as suas necessidades.
+                </p>
+                <p>
+                    <strong>Carros:</strong> Cadastre e acompanhe os detalhes de seus veículos segurados. Nosso sistema mantém tudo organizado, desde a marca e modelo até a vigência da apólice.
+                </p>
+                <p>
+                    <strong>Ocorrências:</strong> Registre e acompanhe qualquer ocorrência relacionada ao seu seguro, como acidentes, furtos ou solicitações de assistência. Transparência e rapidez em cada etapa do processo.
+                </p>
+                <p>
+                    Estamos aqui para oferecer segurança, praticidade e confiança. Conte conosco para proteger o que importa!
+                </p>
+            </div>
+    
+            <img th:src="@{/img/Seguros.jpg}" alt="Logo do Sistema">
+        </div>
+    
+        <footer th:insert="~{fragments/footer :: footer}"></footer>
+    </div>
+</body>
+</html>
