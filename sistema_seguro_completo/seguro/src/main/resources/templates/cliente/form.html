@@ -217,69 +217,55 @@
       
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.6-beta.28/inputmask.min.js"></script>
+
     <script>
         $(document).ready(function () {
-            // Máscara para CPF (000.000.000-00)
-            $('#cpf').inputmask('999.999.999-99');
+    // Aplicar máscaras aos campos
+    $('#cpf').inputmask('999.999.999-99');
+    $('#telefone').inputmask({
+        mask: ['(99) 99999-9999', '(99) 9999-9999'],
+        keepStatic: true
+    });
 
-            // Máscara para Telefone com duas opções: celular ou fixo
-            $('#telefone').inputmask({
-                mask: ['(99) 99999-9999', '(99) 9999-9999'], // Celular e fixo
-                keepStatic: true  // Mantém a máscara no campo enquanto digita
-            });
+    // Função de validação genérica
+    function validarCampo(id, condicao, mensagem) {
+        const campo = $(id);
+        const erro = $(id + '-error');
+        if (condicao) {
+            erro.show().text(mensagem);
+            campo.addClass('input-error');
+            return false;
+        } else {
+            erro.hide();
+            campo.removeClass('input-error');
+            return true;
+        }
+    }
 
-            $('#clienteForm').on('submit', function (e) {
-                const cpf = $('#cpf').val().replace(/[^\d]+/g, '');  // Remove qualquer caractere não numérico
-                const nome = $('#nome').val().trim();  // Remove espaços em branco
-                const rg = $('#rg').val().trim();  // Não remove caracteres não numéricos, pois o RG pode conter letras
-                const telefone = $('#telefone').val().replace(/[^\d]+/g, '');  // Remove qualquer caractere não numérico
+    $('#clienteForm').on('submit', function (e) {
+        let valido = true;
 
-                // Limpa mensagens de erro
-                $('.error-message').hide();
-                $('input').removeClass('input-error');
+        // Remover caracteres não numéricos
+        const cpf = $('#cpf').val().replace(/\D/g, '');
+        const telefone = $('#telefone').val().replace(/\D/g, '');
+        const nome = $('#nome').val().trim();
+        const rg = $('#rg').val().trim();
 
-                // Verifica se todos os campos estão preenchidos
-                if (!cpf || !nome || !rg || !telefone) {
-                    alert('Todos os campos são obrigatórios.');
-                    e.preventDefault();  // Impede o envio do formulário
-                    return;
-                }
+        // Expressão regular para validar nome próprio (apenas letras e espaços, com pelo menos um espaço entre dois nomes)
+        const nomeProprioRegex = /^[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]+(\s[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]+)+$/;
 
-                // Validação do comprimento de CPF
-                if (cpf.length !== 11) {
-                    $('#cpf-error').show();
-                    $('#cpf').addClass('input-error');
-                    e.preventDefault();  // Impede o envio do formulário
-                    return;
-                }
+        // Aplicar validações para todos os campos obrigatórios
+        valido &= validarCampo('#cpf', !cpf, 'O CPF é obrigatório.') && validarCampo('#cpf', cpf.length !== 11, 'O CPF deve ter exatamente 11 dígitos.');
+        valido &= validarCampo('#nome', !nome, 'O nome é obrigatório.') && validarCampo('#nome', !nomeProprioRegex.test(nome), 'Informe um nome próprio válido (ex: João Silva).');
+        valido &= validarCampo('#rg', !rg, 'O RG é obrigatório.') && validarCampo('#rg', rg.length < 9 || rg.length > 16, 'O RG deve ter entre 9 e 16 caracteres.');
+        valido &= validarCampo('#telefone', !telefone, 'O telefone é obrigatório.') && validarCampo('#telefone', telefone.length !== 10 && telefone.length !== 11, 'O telefone deve ter 10 ou 11 dígitos.');
 
-                // Validação do nome
-                if (nome.length === 0) {  // Nome não pode estar vazio
-                    $('#nome-error').show();
-                    $('#nome').addClass('input-error');
-                    e.preventDefault();  // Impede o envio do formulário
-                    return;
-                }
+        if (!valido) {
+            e.preventDefault();
+        }
+    });
+});
 
-                // Validação de RG
-                if (rg.length < 9 || rg.length > 16) {  // Defina o comprimento ideal para o RG
-                    $('#rg-error').show();
-                    $('#rg').addClass('input-error');
-                    e.preventDefault();  // Impede o envio do formulário
-                    return;
-                }
-
-                // Validação do comprimento de Telefone
-                if (telefone.length !== 10 && telefone.length !== 11) {
-                    $('#telefone-error').show();
-                    $('#telefone').addClass('input-error');
-                    e.preventDefault();  // Impede o envio do formulário
-                    return;
-                }
-            });     
-        });
     </script>
       <footer th:insert="~{fragments/footer :: footer}"></footer>
 </body>
