@@ -37,13 +37,14 @@
             /* Define um espaçamento interno uniforme ao redor do conteúdo */
             width: 100%;
             /* Faz com que o container ocupe 100% da largura disponível */
-            max-width: 500px;
+            max-width: 900px;
             /* Limita a largura máxima do container a 700px */
-            margin: 50px auto;
+            margin: 100px auto;
             /* Adiciona espaçamento superior e inferior (50px) e centraliza horizontalmente */
             padding-bottom: 100px;
             /* Adiciona um espaçamento extra na parte inferior do container */
             /* Ajuste os valores de margem ou padding conforme necessário */
+            height: 100%o;
         }
 
 
@@ -147,6 +148,11 @@
             content: " *";
             color: red;
         }
+
+        footer{
+
+            margin-top: 30px;
+        }
     </style>
     <link th:href="@{/css/styles.css}" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
@@ -223,6 +229,50 @@
         <footer th:insert="~{fragments/footer :: footer}"></footer>
 
     </div>
+    <script>
+
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("carroForm");
+
+    form.addEventListener("submit", function (event) {
+        let isValid = true;
+        const requiredFields = form.querySelectorAll("[required]");
+        
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                isValid = false;
+                field.style.borderColor = "red";
+            } else {
+                field.style.borderColor = "#ced6e0";
+            }
+        });
+
+        if (!isValid) {
+            event.preventDefault();
+            alert("Por favor, preencha todos os campos obrigatórios corretamente.");
+        }
+    });
+
+    // Máscaras para entrada de dados
+    $(document).ready(function () {
+        $("#renavam").inputmask("99999999999");
+        $("#placa").inputmask({
+            mask: ["AAA-9999", "AAA9A99"],
+            definitions: {
+                'A': {
+                    validator: "[A-Za-z]",
+                    casing: "upper"
+                },
+                '9': {
+                    validator: "[0-9]"
+                }
+            },
+            keepStatic: true
+        });
+    });
+});
+
+    </script>
 </body>
 
 </html>
