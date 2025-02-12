@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${ocorrencia.codigo != null ? 'Editar Ocorrência' : 'Nova Ocorrência'}">Formulário de Ocorrência
-    </title>
+    <title th:text="${ocorrencia.codigo != null ? 'Editar Ocorrência' : 'Nova Ocorrência'}">Formulário de Ocorrência</title>
+    <script src="https://unpkg.com/imask"></script>
     <style>
-        /* Reset básico */
-        * {
+  /* Reset básico */
+  * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -117,47 +117,28 @@
             color: red;
         }
     </style>
-    <link th:href="@{/css/styles.css}" rel="stylesheet">
 </head>
 
 <body>
     <div class="container">
-        <header th:insert="~{fragments/menu :: menu}"></header>
-        <h1 th:text="${ocorrencia.codigo != null ? 'Editar Ocorrência' : 'Nova Ocorrência'}">Formulário de Ocorrência
-        </h1>
-        <h2 style="font-weight: bold; font-size: 14px; margin-bottom: 15px;">Todos os campos marcados com <span
-                style="color: red;">*</span> são de preenchimento obrigatório.</h2>
-
-        <br>
-        <div class="mensagem-servidor success" th:if="${mensagemSucesso}" th:text="${mensagemSucesso}"></div>
-        <div class="mensagem-servidor error" th:if="${mensagemErro}" th:text="${mensagemErro}"></div>
-
-        <form id="formOcorrencia"
-            th:action="@{${ocorrencia.codigo != null ? '/ocorrencia/editar/' + ocorrencia.codigo : '/ocorrencia/novo'}}"
-            th:object="${ocorrencia}" method="post">
-            <div class="form-group" th:if="${ocorrencia.codigo != null}">
-                <label for="codigo" class="required-field">Código:</label>
-                <input type="text" th:field="*{codigo}" id="codigo" placeholder="Digite o código" readonly
-                    maxlength="10" />
-            </div>
-
+        <h1 th:text="${ocorrencia.codigo != null ? 'Editar Ocorrência' : 'Nova Ocorrência'}"></h1>
+        
+        <form id="formOcorrencia" th:action="@{${ocorrencia.codigo != null ? '/ocorrencia/editar/' + ocorrencia.codigo : '/ocorrencia/novo'}}" th:object="${ocorrencia}" method="post">
             <div class="form-group">
                 <label for="local" class="required-field">Local:</label>
-                <input type="text" th:field="*{local}" id="local" placeholder="Digite o local" required
-                    maxlength="50" />
+                <input type="text" th:field="*{local}" id="local" placeholder="Digite o local" required maxlength="50" />
             </div>
-
+            
             <div class="form-group">
                 <label for="descricao" class="required-field">Descrição:</label>
-                <textarea th:field="*{descricao}" id="descricao" placeholder="Descrição do evento" required
-                    maxlength="255"></textarea>
+                <textarea th:field="*{descricao}" id="descricao" placeholder="Descrição do evento" required maxlength="255"></textarea>
             </div>
-
+            
             <div class="form-group">
                 <label for="data" class="required-field">Data:</label>
-                <input type="date" th:field="*{data}" id="data" required />
+                <input type="date" th:field="*{data}" id="data" required min="2010-01-01"  maxlength="10"/>
             </div>
-
+            
             <div class="form-group">
                 <label for="renavam" class="required-field">Renavam:</label>
                 <select id="renavam" name="renavam" required>
@@ -167,48 +148,28 @@
                     </th:block>
                 </select>
             </div>
-
-            <button type="submit" class="btn"
-                th:text="${ocorrencia.renavam != null ? 'Atualizar' : 'Salvar'}">Salvar</button>
+            
+            <button type="submit" class="btn">Salvar</button>
             <button type="reset" class="btn btn-secondary">Limpar</button>
         </form>
-
- <footer th:insert="~{fragments/footer :: footer}"></footer>
     </div>
 
     <script>
-        document.getElementById('codigo').addEventListener('input', function (e) {
-            e.target.value = e.target.value.replace(/[^0-9]/g, ''); // Apenas números
-        });
-
-        document.getElementById('local').addEventListener('input', function (e) {
-            e.target.value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, ''); // Apenas letras e espaços
-        });
-
-        document.getElementById('descricao').addEventListener('input', function (e) {
-            e.target.value = e.target.value.replace(/[^a-zA-ZÀ-ÿ0-9\s.,-]/g, ''); // Letras, números e caracteres básicos
-        });
-
-        document.getElementById('formOcorrencia').addEventListener('submit', function (e) {
-            const dataInput = document.getElementById('data');
-            if (new Date(dataInput.value) > new Date()) {
-                alert('A data não pode ser futura.');
-                e.preventDefault();
-            }
-        });
-
         document.addEventListener("DOMContentLoaded", function () {
-            const form = document.querySelector("form"); // Substitua pelo seletor correto do seu formulário
-            const renavamSelect = document.getElementById("renavam");
-            const errorMessage = document.getElementById("renavamError");
-
+            const form = document.getElementById("formOcorrencia");
+            
+            // Máscara para campos de texto
+            IMask(document.getElementById("local"), { mask: /^[a-zA-ZÀ-ÿ\s]+$/ });
+            IMask(document.getElementById("descricao"), { mask: /^[a-zA-ZÀ-ÿ0-9\s.,-]+$/ });
+            
             form.addEventListener("submit", function (event) {
-                if (!renavamSelect.value) {
-                    event.preventDefault(); // Impede o envio do formulário
-                    errorMessage.style.display = "block"; // Mostra a mensagem de erro
-                    renavamSelect.focus(); // Foca no campo
-                } else {
-                    errorMessage.style.display = "none"; // Esconde a mensagem de erro
+                const dataInput = document.getElementById("data");
+                const dataSelecionada = new Date(dataInput.value);
+                const dataMinima = new Date("2010-01-01");
+                
+                if (dataSelecionada < dataMinima) {
+                    alert("A data deve ser a partir de 2010.");
+                    event.preventDefault();
                 }
             });
         });
