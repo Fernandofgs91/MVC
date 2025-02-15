@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${ocorrencia.codigo != null ? 'Editar Ocorrência' : 'Nova Ocorrência'}">Formulário de Ocorrência</title>
+    <script src="https://unpkg.com/imask"></script>
+    <style>
+  /* Reset básico */
+  * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fc;
+            color: #2c3e50;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            width: 100%;
+            max-width: 500px;
+            margin: 50px auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #34495e;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .form-group label {
+            font-size: 15px;
+            color: #636e72;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ced6e0;
+            border-radius: 5px;
+            background-color: #f4f6f9;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.4);
+        }
+
+          /* Botões */
+          .btn {
+            padding: 12px 18px;
+            font-size: 16px;
+            font-weight: 700;
+            text-align: center;
+            text-decoration: none;
+            background-color: #3498db;
+            color: #ffffff;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            background-color: #21618c;
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background-color: #95a5a6;
+        }
+
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+
+        .required-field::after {
+            content: " *";
+            color: red;
+        }
+    </style>
+        <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header th:insert="~{fragments/menu :: menu}"></header>
+        <h1 th:text="${ocorrencia.codigo != null ? 'Editar Ocorrência' : 'Nova Ocorrência'}"></h1>
+        <h2 style="font-weight: bold; font-size: 14px; margin-bottom: 15px;">Todos os campos marcados com <span style="color: red;">*</span> são de preenchimento obrigatório.</h2>
+        
+        <form id="formOcorrencia" th:action="@{${ocorrencia.codigo != null ? '/ocorrencia/editar/' + ocorrencia.codigo : '/ocorrencia/novo'}}" th:object="${ocorrencia}" method="post">
+            <div class="form-group">
+                <label for="local" class="required-field">Local:</label>
+                <input type="text" th:field="*{local}" id="local" placeholder="Digite o local" required maxlength="50" />
+            </div>
+            
+            <div class="form-group">
+                <label for="descricao" class="required-field">Descrição:</label>
+                <textarea th:field="*{descricao}" id="descricao" placeholder="Descrição do evento" required maxlength="255"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="data" class="required-field">Data:</label>
+                <input type="date" th:field="*{data}" id="data" required min="2010-01-01"  maxlength="10"/>
+            </div>
+            
+            <div class="form-group">
+                <label for="renavam" class="required-field">Renavam:</label>
+                <select id="renavam" name="renavam" required>
+                    <option value="" disabled selected>Escolha um renavam</option>
+                    <th:block th:each="renavam : ${renavans}">
+                        <option th:value="${renavam}" th:text="${renavam}"></option>
+                    </th:block>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn">Salvar</button>
+            <button type="reset" class="btn btn-secondary">Limpar</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("formOcorrencia");
+            
+            // Máscara para campos de texto
+            IMask(document.getElementById("local"), { mask: /^[a-zA-ZÀ-ÿ\s]+$/ });
+            IMask(document.getElementById("descricao"), { mask: /^[a-zA-ZÀ-ÿ0-9\s.,-]+$/ });
+            
+            form.addEventListener("submit", function (event) {
+                const dataInput = document.getElementById("data");
+                const dataSelecionada = new Date(dataInput.value);
+                const dataMinima = new Date("2010-01-01");
+                
+                if (dataSelecionada < dataMinima) {
+                    alert("A data deve ser a partir de 2010.");
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

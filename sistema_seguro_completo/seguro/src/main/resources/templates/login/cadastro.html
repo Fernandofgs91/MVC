@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/cadastrar.css}">
+    <title>Cadastro</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Cadastro</h1>
+        <form id="cadastroForm" method="POST" action="/login/novoUsuario" onsubmit="return validarSenha(event)">
+            <input type="text" id="usuario" name="usuario" required placeholder="Usuário">
+            <input type="password" name="senha" placeholder="Senha" required>
+            <input type="password" name="confirmarSenha" placeholder="Confirmar Senha" required>
+            <p id="mensagemErro" style="color: red;"></p>
+            <p id="mensagemSucesso" style="color: green;"></p>
+
+            <button type="submit" id="btnCadastrar">Cadastrar</button>
+            <button type="reset">Limpar</button>
+        </form>
+
+        <!-- Mensagens de erro ou sucesso -->
+        <p th:if="${mensagem}" th:text="${mensagem}" class="mensagem" role="alert"></p>
+
+        <p><a href="/" class="signup-link">Já possui uma conta? Faça login</a></p>
+    </div>
+
+    <script>
+       function verificarSenha() {
+            let senha = document.getElementById("senha").value;
+            let confirmarSenha = document.getElementById("txtCheckPwd").value;
+            let mensagemErro = document.getElementById("mensagemErro");
+            let btnCadastrar = document.getElementById("btnCadastrar");
+
+            if (senha.length !== 5) {
+                mensagemErro.textContent = "A senha deve ter exatamente 5 caracteres.";
+                btnCadastrar.disabled = true;
+                return;
+            }
+
+            if (senha !== confirmarSenha) {
+                mensagemErro.textContent = "As senhas não coincidem!";
+                btnCadastrar.disabled = true;
+                return;
+            }
+
+            // Se estiver tudo certo, remove a mensagem de erro e habilita o botão
+            mensagemErro.textContent = "";
+            btnCadastrar.disabled = false;
+        }
+
+        function limparMensagem() {
+            document.getElementById("mensagemErro").textContent = "";
+            document.getElementById("btnCadastrar").disabled = true;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(function () {
+            let mensagem = document.getElementById("mensagem");
+            if (mensagem) {
+                mensagem.style.display = "none";
+            }
+        }, 2000); // 2 segundos
+    });
+    </script>
+</body>
+</html>
